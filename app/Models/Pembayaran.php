@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Pembayaran extends Model
@@ -65,24 +65,25 @@ class Pembayaran extends Model
     }
 
     // untuk view status pembayaran berdasarkan id customer tertentu
-    public static function viewstatus($id_customer)
+    public static function viewstatus($id_customer, $jenisDana)
     {
+
         // query kode perusahaan
         $sql = "SELECT a.id,a.no_transaksi,a.tgl_bayar,a.tgl_konfirmasi,a.bukti_bayar,
                         a.jenis_pembayaran,a.status,
-                        b.total_harga,
-                        GROUP_CONCAT(d.nama_barang ORDER BY d.nama_barang) as list_barang
+                        b.total_pengajuan,
+                        GROUP_CONCAT(d.kode_$jenisDana ORDER BY d.kode_$jenisDana) as list_barang
                 FROM pembayaran a
                 LEFT OUTER JOIN penjualan b
                 ON (a.no_transaksi=b.no_transaksi)
                 LEFT OUTER JOIN penjualan_detail c
                 ON (b.no_transaksi=c.no_transaksi)
-                LEFT OUTER JOIN barang d
-                ON (c.id_barang=d.id)
+                LEFT OUTER JOIN $jenisDana d
+                ON (c.id_pengajuan =d.id)
                 WHERE b.id_customer = ?
                 GROUP BY a.id,a.no_transaksi,a.tgl_bayar,a.tgl_konfirmasi,a.bukti_bayar,
                         a.jenis_pembayaran,a.status,
-                        b.total_harga";
+                        b.total_pengajuan";
         $list = DB::select($sql,[$id_customer]);
 
         return $list;

@@ -7,7 +7,10 @@
   <title>Kas masuk dan keluar</title>
   <link rel="shortcut icon" type="image/png" href="{{asset('images/logos/mukena.png')}}" />
   <link rel="stylesheet" href="{{asset('css/styles.min.css')}}" />
-
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+/>
   <style>
     /* Optional: Custom CSS for DataTables */
     table.dataTable thead tr {
@@ -38,5 +41,8 @@
 
   <!-- fancy box -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css"/>
+
+  {{-- Jquery --}}
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
 </head>

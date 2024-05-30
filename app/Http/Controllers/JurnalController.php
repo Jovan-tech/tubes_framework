@@ -86,62 +86,64 @@ class JurnalController extends Controller
     }
 
     // jurnal umum
-    public function jurnalumum(){
+    public function jurnalumum()
+    {
         return view('laporan/jurnalumum');
     }
 
     // view data jurnal umum
-    public function viewdatajurnalumum($periode){
+    public function viewdatajurnalumum($periode)
+    {
         //query data
         $id_perusahaan = 2; //ini nanti diganti dengan session id perusahaan
         $perusahaan = Perusahaan::whereId($id_perusahaan)->first();
 
-        $jurnal = Jurnal::viewjurnalumum($id_perusahaan,$periode);
-        if($jurnal)
-        {
+        $jurnal = Jurnal::viewjurnalumum($id_perusahaan, $periode);
+        if ($jurnal) {
             return response()->json([
-                'status'=>200,
-                'jurnal'=> $jurnal,
+                'status' => 200,
+                'jurnal' => $jurnal,
                 'perusahaan' => $perusahaan
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
 
     // buku besar
-    public function bukubesar(){
-        $id_perusahaan = 2; //ini nanti diganti dengan session id perusahaan
+    public function bukubesar()
+    {
+        // dd(session('id_perusahaan'));
+        $id_perusahaan = 1; //ini nanti diganti dengan session id perusahaan
         $akun = Jurnal::viewakunbukubesar($id_perusahaan);
-        return view('laporan/bukubesar',
-                        [
-                            'akun' => $akun
-                        ]
-                    );
+        return view(
+            'laporan/bukubesar',
+            [
+                'akun' => $akun
+            ]
+        );
     }
 
     // view data buku besar
-    public function viewdatabukubesar($periode,$akun){
+    public function viewdatabukubesar($periode, $akun)
+    {
         //query data
         $id_perusahaan = 2; //ini nanti diganti dengan session id perusahaan
         $perusahaan = Perusahaan::whereId($id_perusahaan)->first();
 
-        $saldoawal = Jurnal::viewsaldobukubesar($id_perusahaan,$periode,$akun);
+        $saldoawal = Jurnal::viewsaldobukubesar($id_perusahaan, $periode, $akun);
         $posisi = Jurnal::viewposisisaldonormalakun($akun);
 
-        $bukubesar = Jurnal::viewdatabukubesar($id_perusahaan,$periode,$akun);
-            return response()->json([
-                'status'=>200,
-                'bukubesar'=> $bukubesar,
-                'perusahaan' => $perusahaan,
-                'saldoawal' => $saldoawal,
-                'posisi' => $posisi
-            ]);
-       
+        $bukubesar = Jurnal::viewdatabukubesar($id_perusahaan, $periode, $akun);
+        return response()->json([
+            'status' => 200,
+            'bukubesar' => $bukubesar,
+            'perusahaan' => $perusahaan,
+            'saldoawal' => $saldoawal,
+            'posisi' => $posisi
+        ]);
     }
 }

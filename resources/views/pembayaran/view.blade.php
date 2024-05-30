@@ -113,7 +113,7 @@
                                                         </a>
                                                         
                                                     </td>
-                                                    <td>Rp {{ number_format($p->total_harga) }}</td>
+                                                    <td>Rp {{ number_format($p->total_pengajuan) }}</td>
                                                     <td>{{ $p->status }}</td>
                                                 </tr>
                                             @endforeach

@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Penjualan;
 use App\Http\Requests\StorePenjualanRequest;
 use App\Http\Requests\UpdatePenjualanRequest;
-
+use App\Models\Penelitian;
+use App\Models\Pengabdian;
+use App\Models\Kegiatan;
+use Illuminate\Http\Request;
 // untuk validator
-use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth; //untuk mendapatkan auth
 
 class PenjualanController extends Controller
@@ -18,94 +22,95 @@ class PenjualanController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        // getViewBarang()
-        $barang = Penjualan::getBarang();
-        $id_customer = Auth::id(); //dapatkan id customer dari sesi user
-        return view('penjualan.view',
-                [
-                    'barang' => $barang,
-                    'jml' => Penjualan::getJmlBarang($id_customer),
-                    'jml_invoice' => Penjualan::getJmlInvoice($id_customer),
-                ]
-        );
+        // Ambil parameter 'dana' dari URL
+        $danaParam = $request->query('dana');
+
+        if ($danaParam === 'penelitian') {
+            $dana = Penelitian::getPenelitian();
+        } elseif ($danaParam === 'pengabdian') {
+            $dana = Pengabdian::getPengabdian();
+        }
+
+        $id_customer = Auth::id(); // Dapatkan id customer dari sesi user
+
+        return view('penjualan.view', [
+            'dana' => $dana,
+            'jml' => Penjualan::getJmlBarang($id_customer),
+            'jml_invoice' => Penjualan::getJmlInvoice($id_customer),
+            'kegiatan' => Kegiatan::getKegiatan(),
+            "danaParam" => $danaParam
+        ]);
     }
 
     // dapatkan data barang berdasarkan id barang
-    public function getDataBarang($id){
-        $barang = Penjualan::getBarangId($id);
-        if($barang)
-        {
+    public function getDataBarang($id, $dana)
+    {
+        $sql = "SELECT * FROM $dana WHERE id = ?";
+        $barang = DB::select($sql, [$id]);
+        if ($barang) {
             return response()->json([
-                'status'=>200,
-                'barang'=> $barang,
+                'status' => 200,
+                'barang' => $barang,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
 
     // dapatkan data barang berdasarkan id barang
-    public function getDataBarangAll(){
+    public function getDataBarangAll()
+    {
         $barang = Penjualan::getBarang();
-        if($barang)
-        {
+        if ($barang) {
             return response()->json([
-                'status'=>200,
-                'barang'=> $barang,
+                'status' => 200,
+                'barang' => $barang,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
 
     // dapatkan jumlah barang untuk keranjang
-    public function getJumlahBarang(){
+    public function getJumlahBarang()
+    {
         $id_customer = Auth::id();
         $jml_barang = Penjualan::getJmlBarang($id_customer);
-        if($jml_barang)
-        {
+        if ($jml_barang) {
             return response()->json([
-                'status'=>200,
-                'jumlah'=> $jml_barang,
+                'status' => 200,
+                'jumlah' => $jml_barang,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
 
     // dapatkan jumlah barang untuk keranjang
-    public function getInvoice(){
+    public function getInvoice()
+    {
         $id_customer = Auth::id();
         $jml_barang = Penjualan::getJmlInvoice($id_customer);
-        if($jml_barang)
-        {
+        if ($jml_barang) {
             return response()->json([
-                'status'=>200,
-                'jmlinvoice'=> $jml_barang,
+                'status' => 200,
+                'jmlinvoice' => $jml_barang,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
@@ -132,11 +137,11 @@ class PenjualanController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'jumlah' => 'required',
+                'harga' => 'required',
             ]
         );
-        
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             // gagal
             return response()->json(
                 [
@@ -144,26 +149,26 @@ class PenjualanController extends Controller
                     'errors' => $validator->messages(),
                 ]
             );
-        }else{
+        } else {
             // berhasil
 
             // cek apakah tipenya input atau update
             // input => tipeproses isinya adalah tambah
             // update => tipeproses isinya adalah ubah
-            
-            if($request->input('tipeproses')=='tambah'){
+
+            if ($request->input('tipeproses') == 'tambah') {
 
                 $id_customer = Auth::id();
-                $jml_barang = $request->input('jumlah');
-                $id_barang = $request->input('idbaranghidden');
+                $nama_kegiatan = $request->input('idkegiatanhidden');  // id_pengajuan              
+                // $id_barang = $request->input('idbaranghidden'); // harga
+                $harga = $request->input('harga'); // harga
 
-                $brg = Penjualan::getBarangId($id_barang);
-                foreach($brg as $b):
-                    $harga_barang = $b->harga;
-                endforeach;
+                // $brg = Penjualan::getBarangId($id_barang);
+                // foreach ($brg as $b) :
+                //     $harga_barang = $b->harga;
+                // endforeach;
 
-                $total_harga = $harga_barang*$jml_barang;
-                Penjualan::inputPenjualan($id_customer,$total_harga,$id_barang,$jml_barang,$harga_barang,$total_harga);
+                Penjualan::inputPenjualan($id_customer, $nama_kegiatan, $harga);
 
                 return response()->json(
                     [
@@ -221,81 +226,87 @@ class PenjualanController extends Controller
     }
 
     // view keranjang
-    public function keranjang(){
+    public function keranjang(Request $request)
+    {
+        $danaParam = $request->query('dana');
         $id_customer = Auth::id();
-        $keranjang = Penjualan::viewKeranjang($id_customer);
-        return view('penjualan/viewkeranjang',
-                [
-                    'keranjang' => $keranjang
-                ]
+        $keranjang = Penjualan::viewKeranjang($id_customer, $danaParam);
+        return view(
+            'penjualan/viewkeranjang',
+            [
+                'keranjang' => $keranjang,
+                'danaParam' => $danaParam
+            ]
         );
     }
 
     // view status
-    public function viewstatus(){
+    public function viewstatus()
+    {
         $id_customer = Auth::id();
         // dapatkan id ke berapa dari status pemesanan
         $id_status_pemesanan = Penjualan::getIdStatus($id_customer);
         $status_pemesanan = Penjualan::getStatusAll($id_customer);
-        return view('penjualan.viewstatus',
-                [
-                    'status_pemesanan' => $status_pemesanan,
-                    'id_status_pemesanan'=> $id_status_pemesanan
-                ]
+        return view(
+            'penjualan.viewstatus',
+            [
+                'status_pemesanan' => $status_pemesanan,
+                'id_status_pemesanan' => $id_status_pemesanan
+            ]
         );
-    } 
+    }
 
     // view keranjang
-    public function keranjangjson(){
+    public function keranjangjson()
+    {
         $id_customer = Auth::id();
         $keranjang = Penjualan::viewKeranjang($id_customer);
-        if($keranjang)
-        {
+        if ($keranjang) {
             return response()->json([
-                'status'=>200,
-                'keranjang'=> $keranjang,
+                'status' => 200,
+                'keranjang' => $keranjang,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
 
     // view keranjang
-    public function checkout(){
+    public function checkout(Request $request)
+    {
+        $jenisDana = $request->input("dana");
         $id_customer = Auth::id();
         Penjualan::checkout($id_customer); //proses cekout
         $barang = Penjualan::getBarang();
 
-        return redirect('pembayaran/viewkeranjang');
+        return redirect('pembayaran/viewkeranjang?dana=' . $jenisDana);
+
     }
 
     // invoice
-    public function invoice(){
+    public function invoice()
+    {
         $id_customer = Auth::id();
         $invoice = Penjualan::getListInvoice($id_customer);
-        if($invoice)
-        {
+        if ($invoice) {
             return response()->json([
-                'status'=>200,
-                'invoice'=> $invoice,
+                'status' => 200,
+                'invoice' => $invoice,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Tidak ada data ditemukan.'
+                'status' => 404,
+                'message' => 'Tidak ada data ditemukan.'
             ]);
         }
     }
 
     // delete penjualan detail
-    public function destroypenjualandetail($id_penjualan_detail){
+    public function destroypenjualandetail($id_penjualan_detail)
+    {
         // kembalikan stok ke semula
         Penjualan::kembalikanstok($id_penjualan_detail);
 
@@ -305,7 +316,8 @@ class PenjualanController extends Controller
         $id_customer = Auth::id();
         $keranjang = Penjualan::viewKeranjang($id_customer);
 
-        return view('penjualan/viewkeranjang',
+        return view(
+            'penjualan/viewkeranjang',
             [
                 'keranjang' => $keranjang,
                 'status_hapus' => 'Sukses Hapus'

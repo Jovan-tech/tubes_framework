@@ -72,8 +72,7 @@
                         $no_transaksi = '';
                         $totaltagihan = 0;
                         foreach($keranjang as $k):
-                            $no_transaksi = $k->no_transaksi ;
-                            $totaltagihan = $totaltagihan + $k->total ;
+                            $no_transaksi = $k->no_transaksi ;                            
                         endforeach;
                 ?>
 
@@ -82,6 +81,7 @@
                         @csrf
                         <input type="hidden" id="no_transaksi" name="no_transaksi" value="{{$no_transaksi}}">
                         <input type="hidden" id="tipeproses" name="tipeproses" value="tunai">
+                        <input type="hidden" name="dana" value="{{ $danaParam }}">
                         <fieldset disabled>
                             <div class="mb-3"><label for="kodeperusahaanlabel">No Pengajuan</label>
                             <input class="form-control form-control-solid" id="kode" name="kode" type="text" value="{{$no_transaksi}}" readonly></div>
@@ -90,10 +90,10 @@
                             <ul class="list-group">
                             @foreach ($keranjang as $k)
                                 <li class="list-group-item">
-                                    <b>{{$k->nama_barang}}</b> <br>
+                                    <b>{{$k->kode_penelitian ?? $k->kode_pengabdian}}</b> <br>
                                     <div class="row">
                                         <div class="col-sm-2">
-                                            <img width="150px" height="150px" id="x-2" src="{{url('barang')}}/{{$k->foto}}" zn_id="79" title alt="ok">
+                                            {{-- <img width="150px" height="150px" id="x-2" src="{{url('barang')}}/{{$k->foto}}" zn_id="79" title alt="ok"> --}}
                                         </div>
                                         <div class="col-sm-10" align="left">
                                             <table>
@@ -102,31 +102,14 @@
                                                     Pengajuan
                                                     </td>
                                                     <td>=</td>
-                                                    <td style="text-align:right">{{rupiah($k->harga)}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                    Jumlah
-                                                    </td>
-                                                    <td>=</td>
-                                                    <td style="text-align:right">{{number_format($k->jml_barang)}}</td>
-                                                    
-                                                </tr>
+                                                    <td style="text-align:right">{{rupiah($k->total_pengajuan)}}</td>
+                                                </tr>                                               
                                                 <tr>
                                                     <td colspan="3">
                                                      <hr>
                                                     </td>
                                                     
-                                                </tr>
-                                                <tr> 
-                                                    <td>
-                                                    Total 
-                                                    </td>
-                                                    <td>=</td>
-                                                    <td style="text-align:right">
-                                                        {{rupiah($k->total)}}
-                                                    </td>
-                                                </tr>
+                                                </tr>                                               
                                             </table>
                                         </div>
                                     </div>
@@ -139,7 +122,7 @@
                         <div class="mb-3 row">
                             <label for="nomerlabel" class="col-sm-4 col-form-label">Bukti surat pernyataan mahasiswa & TTD Dosen</label>
                             <div class="col-sm-8">
-                                <input type="file" class="form-control @error('bukti_bayar') is-invalid @enderror" id="bukti_bayar" name="bukti_bayar" value="{{ old('bukti_bayar') }}">
+                              <input type="file" class="form-control @error('bukti_bayar') is-invalid @enderror" id="bukti_bayar" name="bukti_bayar" accept="application/pdf" value="{{ old('bukti_bayar') }}">
                                 @error('bukti_bayar')
                                     <div>{{ $message }}</div>
                                 @enderror

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 
@@ -13,7 +14,16 @@ class Kegiatan extends Model
     use HasFactory;
     protected $table = 'kegiatan';
     // list kolom yang bisa diisi
-    protected $fillable = ['jenis_kegiatan','kode_kegiatan','nama_kegiatan','alamat_kegiatan'];
+    protected $fillable = ['jenis_kegiatan', 'kode_kegiatan', 'nama_kegiatan', 'alamat_kegiatan'];
+
+    // untuk melihat data kegiatan
+    public static function getKegiatan()
+    {
+        // query ke tabel penelitian
+        $sql = "SELECT * FROM kegiatan";
+        $kegiatan = DB::select($sql);
+        return $kegiatan;
+    }
 
     // query nilai max dari kode kegiatan untuk generate otomatis kode kegiatan
     public function getKodeKegiatan()
@@ -28,13 +38,12 @@ class Kegiatan extends Model
             $kd = $kdprsh->kode_kegiatan;
         }
         // Mengambil substring tiga digit akhir dari string PR-000
-        $noawal = substr($kd,-3);
-        $noakhir = $noawal+1; //menambahkan 1, hasilnya adalah integer cth 1
-        
+        $noawal = substr($kd, -3);
+        $noakhir = $noawal + 1; //menambahkan 1, hasilnya adalah integer cth 1
+
         //menyambung dengan string PR-001
-        $noakhir = 'KG-'.str_pad($noakhir,3,"0",STR_PAD_LEFT); 
+        $noakhir = 'KG-' . str_pad($noakhir, 3, "0", STR_PAD_LEFT);
 
         return $noakhir;
-
     }
 }

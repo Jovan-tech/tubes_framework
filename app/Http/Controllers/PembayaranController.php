@@ -7,6 +7,7 @@ use App\Models\Pembayaran;
 use App\Models\Penjualan; 
 use App\Http\Requests\StorePembayaranRequest;
 use App\Http\Requests\UpdatePembayaranRequest;
+use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB; // untuk query 
 use Illuminate\Support\Facades\Auth; //untuk mendapatkan auth
@@ -49,12 +50,14 @@ class PembayaranController extends Controller
      * @param  \App\Http\Requests\StorePembayaranRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePembayaranRequest $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'tgl_bayar' => 'required',
-            'bukti_bayar' => 'file|required|image|mimes:jpeg,png,jpg|max:2048'
+            'bukti_bayar' => 'file|required|mimes:pdf|max:2048'
         ]);
+
+        $jenisDana = $request->input("dana");
         
         if($validated){
             // berhasil
@@ -74,14 +77,15 @@ class PembayaranController extends Controller
                 $id_customer = Auth::id();
                 Pembayaran::updateStatusKonformasiPembayaran($request->input('no_transaksi'),$id_customer);
 
-                return redirect('/pembayaran/viewstatus');
+                return redirect('/pembayaran/viewstatus?dana=' . $jenisDana);
                 // return redirect()->to('/pembayaran')->with('success','Data Konfirmasi Berhasil di Input');
             }
         }else{
             // validasi gagal
             //query data
+            
             $id_customer = Auth::id();
-            $keranjang = Penjualan::viewKeranjang($id_customer);
+            $keranjang = Penjualan::viewKeranjang($id_customer, $jenisDana);
             return view('pembayaran/create',
                         [
                             'keranjang' => $keranjang
@@ -137,22 +141,25 @@ class PembayaranController extends Controller
     }
 
     // view data keranjang yang akan di bayarkan
-    public function viewkeranjang(){
-        //query data
+    public function viewkeranjang(Request $request){
+        //query data    
+        $jenisDana = $request->input('dana');
         $id_customer = Auth::id();
-        $keranjang = Penjualan::viewSiapBayar($id_customer);
+        $keranjang = Penjualan::viewSiapBayar($id_customer, $jenisDana);
         return view('pembayaran/create',
                     [
-                        'keranjang' => $keranjang
+                        'keranjang' => $keranjang,
+                        'danaParam' => $jenisDana
                     ]
                   );
     }
 
     // view status pembayaran
-    public function viewstatus(){
+    public function viewstatus(Request $request){
+        $jenisDana = $request->input("dana");
         //query data
         $id_customer = Auth::id();
-        $pembayaran = Pembayaran::viewstatus($id_customer);
+        $pembayaran = Pembayaran::viewstatus($id_customer, $jenisDana);
         return view('pembayaran/view',
                     [
                         'statuspembayaran' => $pembayaran

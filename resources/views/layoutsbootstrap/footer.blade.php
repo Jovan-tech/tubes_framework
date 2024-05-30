@@ -5,6 +5,14 @@
       </div>
     </div>
   </div>
+  <script>
+   $(document).on('click', '#menu', function(e) {
+      console.log("uy")
+      $(this)[0].children[0].children[2].children[0].classList.toggle("bi-chevron-up")
+      $(this)[0].children[0].children[2].children[0].classList.toggle("bi-chevron-down")
+      $(this)[0].nextElementSibling.classList.toggle("d-none")
+   })
+  </script>
   <script src="{{asset('libs/jquery/dist/jquery.min.js')}}"></script>
   <script src="{{asset('libs/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
   <script src="{{asset('js/sidebarmenu.js')}}"></script>

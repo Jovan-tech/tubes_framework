@@ -121,7 +121,7 @@ Route::get('/permintaan/destroy/{id}', [App\Http\Controllers\PermintaanControlle
 Route::resource('/kas', KasController::class)->middleware(['auth']);
 Route::get('/kas/destroy/{id}', [App\Http\Controllers\KasController::class,'destroy'])->middleware(['auth']);
 
-Route::get('penjualan/barang/{id}', [App\Http\Controllers\PenjualanController::class,'getDataBarang'])->middleware(['auth']);
+Route::get('penjualan/barang/{id}/{dana}', [App\Http\Controllers\PenjualanController::class,'getDataBarang'])->middleware(['auth']);
 Route::get('penjualan/keranjang', [App\Http\Controllers\PenjualanController::class,'keranjang'])->middleware(['auth']);
 Route::get('penjualan/destroypenjualandetail/{id}', [App\Http\Controllers\PenjualanController::class,'destroypenjualandetail'])->middleware(['auth']);
 Route::get('penjualan/barang', [App\Http\Controllers\PenjualanController::class,'getDataBarangAll'])->middleware(['auth']);

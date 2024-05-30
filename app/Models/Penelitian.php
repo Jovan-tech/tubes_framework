@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 
@@ -13,7 +14,17 @@ class Penelitian extends Model
     use HasFactory;
     protected $table = 'penelitian';
     // list kolom yang bisa diisi
-    protected $fillable = ['kode_penelitian','internal','eksternal','lainnya'];
+    protected $fillable = ['kode_penelitian', 'internal', 'eksternal', 'lainnya'];
+
+
+    // untuk melihat data penelitian
+    public static function getPenelitian()
+    {
+        // query ke tabel penelitian
+        $sql = "SELECT * FROM penelitian";
+        $penelitian = DB::select($sql);
+        return $penelitian;
+    }
 
     // query nilai max dari kode penelitian untuk generate otomatis kode penelitian
     public function getKodePenelitian()
@@ -28,13 +39,12 @@ class Penelitian extends Model
             $kd = $kdprsh->kode_penelitian;
         }
         // Mengambil substring tiga digit akhir dari string PR-000
-        $noawal = substr($kd,-3);
-        $noakhir = $noawal+1; //menambahkan 1, hasilnya adalah integer cth 1
-        
+        $noawal = substr($kd, -3);
+        $noakhir = $noawal + 1; //menambahkan 1, hasilnya adalah integer cth 1
+
         //menyambung dengan string PR-001
-        $noakhir = 'PN-'.str_pad($noakhir,3,"0",STR_PAD_LEFT); 
+        $noakhir = 'PN-' . str_pad($noakhir, 3, "0", STR_PAD_LEFT);
 
         return $noakhir;
-
     }
 }
