@@ -234,22 +234,20 @@ class PembayaranController extends Controller
         //catat ke jurnal
         DB::table('jurnal')->insert([
             'id_transaksi' => $data_pembayaran->id,
-            'id_perusahaan' => 1, //bisa diganti kalau sudah live
             'kode_akun' => '111',
             'tgl_jurnal' => $date,
             'posisi_d_c' => 'd',
-            'nominal' => $data_penjualan->total_harga,
+            'nominal' => $data_penjualan->total_pengajuan,
             'kelompok' => 1,
             'transaksi' => 'penjualan',
         ]);
 
         DB::table('jurnal')->insert([
             'id_transaksi' => $data_pembayaran->id,
-            'id_perusahaan' => 1, //bisa diganti kalau sudah live
             'kode_akun' => '411',
             'tgl_jurnal' => $date,
             'posisi_d_c' => 'c',
-            'nominal' => $data_penjualan->total_harga,
+            'nominal' => $data_penjualan->total_pengajuan,
             'kelompok' => 1,
             'transaksi' => 'penjualan',
         ]);
@@ -292,22 +290,20 @@ class PembayaranController extends Controller
         //catat ke jurnal
         DB::table('jurnal')->insert([
             'id_transaksi' => $data_pembayaran->id,
-            'id_perusahaan' => 1, //bisa diganti kalau sudah live
             'kode_akun' => '111',
             'tgl_jurnal' => $date,
             'posisi_d_c' => 'd',
-            'nominal' => $data_penjualan->total_harga,
+            'nominal' => $data_penjualan->total_pengajuan,
             'kelompok' => 1,
             'transaksi' => 'penjualan',
         ]);
 
         DB::table('jurnal')->insert([
             'id_transaksi' => $data_pembayaran->id,
-            'id_perusahaan' => 1, //bisa diganti kalau sudah live
             'kode_akun' => '411',
             'tgl_jurnal' => $date,
             'posisi_d_c' => 'c',
-            'nominal' => $data_penjualan->total_harga,
+            'nominal' => $data_penjualan->total_pengajuan,
             'kelompok' => 1,
             'transaksi' => 'penjualan',
         ]);

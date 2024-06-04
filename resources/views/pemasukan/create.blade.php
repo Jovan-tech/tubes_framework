@@ -75,39 +75,33 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                        <h5 class="card-title fw-semibold">Data Pengeluaran</h5>
+                                        <h5 class="card-title fw-semibold">Data Pemasukan</h5>
                                     </div>
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                        <a href="{{ url('/pengeluaran/tambah') }}"
+                                        <a href="{{ url('/pemasukan/tambah') }}"
                                             class="btn btn-success btn-icon-split">
-                                            <span class="text">Tambah Pengeluaran</span>
+                                            <span class="text">Tambah Pemasukan</span>
                                             <span class="icon text-white-200">
                                                 <i class="ti ti-plus"></i>
                                             </span>
                                         </a>
                                     </div>
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                        <label class="card-title fw-semibold transparan-bro" for="tanggal_awal">Tanggal Awal</label>
-                                        <input type="date" id="tanggal_awal" name="tanggal_awal" class="form-control">
-
-                                        <label class="card-title fw-semibold transparan-bro" for="tanggal_akhir">Tanggal Akhir</label>
-                                        <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="form-control">
+                                        <p class="card-title fw-semibold transparan-bro">Tanggal Awal</p>
+                                        <p class="card-title fw-semibold transparan-bro">Tanggal Akhir</p>
                                     </div>
-
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                 <thead class="thead-dark">
-                                                    <tr>
-                                                    
+                                                    <tr>                                                    
                                                     <th>Tanggal</th>
                                                     <th>Perincian</th>
-                                                         
-                                                    <th>Jumlah</th>        
-                                                    <th>Aksi</th>                                        
+                                                    <th>Jumlah</th>
+                                                    <th>Aksi</th>                                                     
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($pengeluaran as $p)
+                                                    @foreach ($pemasukan as $p)
                                                     <tr>
                                                         
                                                         <td>{{ $p -> tanggal}}</td>
@@ -115,7 +109,7 @@
                                                         <td>Rp.{{ number_format ($p -> jumlah, 0, ',', '.') }}</td>
                                                         
                                                         <td>                                                    
-                                                            <a href="{{ route('pengeluaran.edit', $p->id) }}" class="btn btn-success btn-icon-split btn-sm">
+                                                            <a href="{{ route('pemasukan.edit', $p->id) }}" class="btn btn-success btn-icon-split btn-sm">
                                                                 <span class="icon text-white-50">
                                                                     <i class="ti ti-check"></i>
                                                                 </span>

@@ -111,7 +111,7 @@
                                                 </a>
                                                 
                                             </td>
-                                            <td>{{ rupiah($p->total_harga) }}</td>
+                                            <td>{{ rupiah($p->total_pengajuan) }}</td>
                                             <td>{{ $p->status }}</td>
                                             <td>
                                                 <?php 
