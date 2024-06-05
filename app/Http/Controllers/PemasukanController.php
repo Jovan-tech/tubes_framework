@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StorePengeluaranRequest;
-use App\Http\Requests\UpdatePengeluaranRequest;
+use App\Http\Requests\StorePemasukanRequest;
+use App\Http\Requests\UpdatePemasukanRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Pengeluaran;
+use App\Models\Pemasukan;
 
-class PengeluaranController extends Controller
+class PemasukanController extends Controller
 {
 
     public static function index ()
     {
         //query data
-        $pengeluaran = Pengeluaran::all();
-        return view('pengeluaran.create',
+        $pemasukan = Pemasukan::all();
+        return view('pemasukan.create',
                     [
-                        'pengeluaran' => $pengeluaran
+                        'pemasukan' => $pemasukan
                     ]
                   );
     }
-    public function store(StorePengeluaranRequest $request)
+    public function store(StorePemasukanRequest $request)
     {
         //digunakan untuk validasi kemudian kalau ok tidak ada masalah baru disimpan ke db
         $validated = $request->validate([
@@ -32,11 +32,11 @@ class PengeluaranController extends Controller
         ]);
 
         // masukkan ke db
-        Pengeluaran::create($request->all());
+        Pemasukan::create($request->all());
         
-        return redirect()->route('pengeluaran.index')->with('success','Data Berhasil di Input');
+        return redirect()->route('pemasukan.index')->with('success','Data Berhasil di Input');
     }
-    public function edit(UpdatePengeluaranRequest $request, Pengeluaran $pengeluaran)
+    public function edit(UpdatePemasukanRequest $request, Pemasukan $pemasukan)
     {
         //digunakan untuk validasi kemudian kalau ok tidak ada masalah baru diupdate ke db
         $validated = $request->validate([
@@ -45,12 +45,9 @@ class PengeluaranController extends Controller
             'perincian' => 'required',
         ]);
     
-        $pengeluaran->update($validated);
+        $pemasukan->update($validated);
     
-        return redirect()->route('pengeluaran.index')->with('success','Data Berhasil di Ubah');
-    }
-    public static function show(){
-        
+        return redirect()->route('pemasukan.index')->with('success','Data Berhasil di Ubah');
     }
 
 }

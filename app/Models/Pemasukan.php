@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pengeluaran extends Model
+class Pemasukan extends Model
 {
     use HasFactory;
 
-    protected $table = "pengeluaran";
+    protected $table = "pemasukan";
 
     protected $fillable = [
         'jumlah',
@@ -17,11 +17,11 @@ class Pengeluaran extends Model
         'perincian',
     ];
 
-    public static function getpengeluaran()
+    public static function getpemasukan()
     {
         // query ke tabel penelitian
-        $sql = "SELECT * FROM pengeluaran";
-        $pengeluaran = DB::select($sql);
-        return $pengeluaran;
+        $sql = "SELECT * FROM pemasukan";
+        $pemasukan = DB::select($sql);
+        return $pemasukan;
     }
 }

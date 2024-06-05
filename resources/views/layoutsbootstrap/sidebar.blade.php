@@ -58,15 +58,7 @@
                                 </span>
                                 <span class="hide-menu">PIC</span>
                             </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('pengeluaran') }}" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-file-description"></i>
-                                </span>
-                                <span class="hide-menu">Pengeluaran</span>
-                            </a>
-                        </li>
+                        </li>                    
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ url('penelitian') }}" aria-expanded="false">
                                 <span>
@@ -84,7 +76,7 @@
                                 <span>
                                     <i class="ti ti-shopping-cart"></i>
                                 </span>
-                                <span class="hide-menu">Pengajuan</span>
+                                <span class="hide-menu">Kas</span>
                                 <span class="hide-menu text-sm">
                                     <i class="bi bi-chevron-up" id="arrow"></i>
                                 </span>
@@ -95,37 +87,25 @@
                             class="sidebar-item {{ request()->is('penjualan*') ? '' : 'd-none' }} d-flex flex-column p-2">
                             <div>
                                 <a class="sidebar-link"
-                                    href="{{ url('penjualan') }}?dana=pengabdian">
-                                    <span class="hide-menu pl-4">Pengabdian</span>
+                                    href="{{ url('pemasukan') }}">
+                                    <span class="hide-menu pl-4">Pemasukan</span>
                                 </a>
                             </div>
                             <div>
                                 <a class="sidebar-link"
-                                    href="{{ url('penjualan') }}?dana=penelitian">
-                                    <span class="hide-menu pl-4">Penelitian</span>
+                                    href="{{ url('pengeluaran') }}">
+                                    <span class="hide-menu pl-4">Pengeluaran</span>
                                 </a>
                             </div>                         
                         </li>
                         {{-- end sub menu pengajuan --}}
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('pembayaran/viewkeranjang') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ url('jurnal') }}" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-credit-card"></i>
                                 </span>
-                                <span class="hide-menu">Form</span>
-                            </a>
-                        </li>
-
-
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('pembayaran/viewapprovalstatus') }}"
-                                aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-credit-card"></i>
-                                </span>
-                                <span class="hide-menu">Approval</span>
+                                <span class="hide-menu">Transaksi</span>
                             </a>
                         </li>
 

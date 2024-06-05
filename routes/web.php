@@ -9,6 +9,7 @@ use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PenelitianBController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PICController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PembayaranController;
@@ -52,6 +53,28 @@ Route::get('/selamat', function () {
     return view('selamat',['nama'=>'Hendro Jokondo-kondo']);
 });
 
+Route::get('/pemasukan/tambah', function () {
+    return view('pemasukan.tambah');
+});
+
+route::get('/pemasukan', function (){
+    return view('pemasukan/create');
+});
+
+
+Route::get('/pengeluaran/tambah', function () {
+    return view('pengeluaran.tambah');
+});
+
+Route::resource('/jurnal', JurnalController::class)->middleware(['auth']);
+
+Route::resource('/pemasukan', PemasukanController::class)->middleware(['auth']);
+Route::get('/pemasukan/destroy/{id}', [App\Http\Controllers\PemasukanController::class,'destroy'])->middleware(['auth']);
+
+Route::resource('/pengeluaran', PengeluaranController::class)->middleware(['auth']);
+Route::get('/pengeluaran/destroy/{id}', [App\Http\Controllers\PengeluaranController::class,'destroy'])->middleware(['auth']);
+
+
 // route contoh1
 Route::get('/contoh1', [App\Http\Controllers\Contoh1Controller::class, 'show']);
 Route::get('teshelpercustom', [App\Http\Controllers\Contoh1Controller::class, 'teshelpercustom']);
@@ -93,10 +116,6 @@ Route::get('/pengabdian/destroy/{id}', [App\Http\Controllers\PengabdianControlle
 //route ke master data PIC
 Route::resource('/pic', PICController::class)->middleware(['auth']);
 Route::get('/pic/destroy/{id}', [App\Http\Controllers\PICController::class,'destroy'])->middleware(['auth']);
-
-//route ke master data Pengeluaran
-Route::resource('/pengeluaran', PengeluaranController::class)->middleware(['auth']);
-Route::get('/pengeluaran/destroy/{id}', [App\Http\Controllers\PengeluaranController::class,'destroy'])->middleware(['auth']);
 
 //route ke master data Penelitian A
 Route::resource('/penelitiana', PenelitianAController::class)->middleware(['auth']);

@@ -69,20 +69,20 @@
                 <!-- Akhir Display Error -->
 
                 <!-- Awal Dari Input Form -->
-                <form action="{{ route('pengeluaran.edit', $pengeluaran->id) }}" method="post">
+                <form action="{{ route('pemasukan.edit', $pemasukan->id) }}" method="post">
                     @csrf
                     @method('PUT')
                     
-                        <div class="mb-3"><label for="kodepengeluaranlabel">Jumlah</label>
-                        <input class="form-control form-control-solid" id="jumlah" name="jumlah" type="number" value="{{$pengeluaran->jumlah}}"></div>
+                        <div class="mb-3"><label for="kodepemasukanlabel">Jumlah</label>
+                        <input class="form-control form-control-solid" id="jumlah" name="jumlah" type="number" value="{{$pemasukan->jumlah}}"></div>
 
-                    <div class="mb-3"><label for="namapengeluaranlabel">tanggal</label>
-                    <input class="form-control form-control-solid" id="tanggal" name="tanggal" type="date" value="{{$pengeluaran->tanggal}}">
+                    <div class="mb-3"><label for="namapemasukanlabel">tanggal</label>
+                    <input class="form-control form-control-solid" id="tanggal" name="tanggal" type="date" value="{{$pemasukan->tanggal}}">
                     </div>
                     
         
-                    <div class="mb-0"><label for="alamatpengeluaranlabel">Perincian</label>
-                        <textarea class="form-control form-control-solid" id="perincian" name="perincian" rows="3">{{$pengeluaran->perincian}}</textarea>
+                    <div class="mb-0"><label for="alamatpemasukanlabel">Perincian</label>
+                        <textarea class="form-control form-control-solid" id="perincian" name="perincian" rows="3">{{$pemasukan->perincian}}</textarea>
                     </div>
                     <br>
                     <!-- untuk tombol simpan -->
@@ -90,7 +90,7 @@
                     <input class="col-sm-1 btn btn-success btn-sm" type="submit" value="Ubah">
 
                     <!-- untuk tombol batal simpan -->
-                    <a class="col-sm-1 btn btn-dark  btn-sm" href="{{ url('/pengeluaran') }}" role="button">Batal</a>
+                    <a class="col-sm-1 btn btn-dark  btn-sm" href="{{ url('/pemasukan') }}" role="button">Batal</a>
                     
                 </form>
                 <!-- Akhir Dari Input Form -->

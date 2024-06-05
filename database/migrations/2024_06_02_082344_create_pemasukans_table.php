@@ -4,19 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePengeluaransTable extends Migration
+class CreatePemasukansTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    
+    public function up(): void
     {
-        Schema::create('pengeluaran', function (Blueprint $table) {
+        Schema::create('pemasukan', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('jumlah');
-            $table->datetime('tanggal');
+            $table->dateTime('tanggal');
             $table->string('perincian');
             $table->timestamps();
         });
@@ -24,11 +23,9 @@ class CreatePengeluaransTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('pengeluaran');
+        Schema::dropIfExists('pemasukan');
     }
-}
+};
