@@ -7,7 +7,6 @@ use App\Models\Pembayaran;
 use App\Models\Penjualan; 
 use App\Http\Requests\StorePembayaranRequest;
 use App\Http\Requests\UpdatePembayaranRequest;
-use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB; // untuk query 
 use Illuminate\Support\Facades\Auth; //untuk mendapatkan auth
@@ -50,14 +49,12 @@ class PembayaranController extends Controller
      * @param  \App\Http\Requests\StorePembayaranRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePembayaranRequest $request)
     {
         $validated = $request->validate([
             'tgl_bayar' => 'required',
-            'bukti_bayar' => 'file|required|mimes:pdf|max:2048'
+            'bukti_bayar' => 'file|required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-
-        $jenisDana = $request->input("dana");
         
         if($validated){
             // berhasil
@@ -77,15 +74,14 @@ class PembayaranController extends Controller
                 $id_customer = Auth::id();
                 Pembayaran::updateStatusKonformasiPembayaran($request->input('no_transaksi'),$id_customer);
 
-                return redirect('/pembayaran/viewstatus?dana=' . $jenisDana);
+                return redirect('/pembayaran/viewstatus');
                 // return redirect()->to('/pembayaran')->with('success','Data Konfirmasi Berhasil di Input');
             }
         }else{
             // validasi gagal
             //query data
-            
             $id_customer = Auth::id();
-            $keranjang = Penjualan::viewKeranjang($id_customer, $jenisDana);
+            $keranjang = Penjualan::viewKeranjang($id_customer);
             return view('pembayaran/create',
                         [
                             'keranjang' => $keranjang
@@ -141,25 +137,22 @@ class PembayaranController extends Controller
     }
 
     // view data keranjang yang akan di bayarkan
-    public function viewkeranjang(Request $request){
-        //query data    
-        $jenisDana = $request->input('dana');
+    public function viewkeranjang(){
+        //query data
         $id_customer = Auth::id();
-        $keranjang = Penjualan::viewSiapBayar($id_customer, $jenisDana);
+        $keranjang = Penjualan::viewSiapBayar($id_customer);
         return view('pembayaran/create',
                     [
-                        'keranjang' => $keranjang,
-                        'danaParam' => $jenisDana
+                        'keranjang' => $keranjang
                     ]
                   );
     }
 
     // view status pembayaran
-    public function viewstatus(Request $request){
-        $jenisDana = $request->input("dana");
+    public function viewstatus(){
         //query data
         $id_customer = Auth::id();
-        $pembayaran = Pembayaran::viewstatus($id_customer, $jenisDana);
+        $pembayaran = Pembayaran::viewstatus($id_customer);
         return view('pembayaran/view',
                     [
                         'statuspembayaran' => $pembayaran
@@ -234,81 +227,26 @@ class PembayaranController extends Controller
         //catat ke jurnal
         DB::table('jurnal')->insert([
             'id_transaksi' => $data_pembayaran->id,
+            'id_perusahaan' => 1, //bisa diganti kalau sudah live
             'kode_akun' => '111',
             'tgl_jurnal' => $date,
             'posisi_d_c' => 'd',
-            'nominal' => $data_penjualan->total_pengajuan,
+            'nominal' => $data_penjualan->total_harga,
             'kelompok' => 1,
             'transaksi' => 'penjualan',
         ]);
 
         DB::table('jurnal')->insert([
             'id_transaksi' => $data_pembayaran->id,
+            'id_perusahaan' => 1, //bisa diganti kalau sudah live
             'kode_akun' => '411',
             'tgl_jurnal' => $date,
             'posisi_d_c' => 'c',
-            'nominal' => $data_penjualan->total_pengajuan,
+            'nominal' => $data_penjualan->total_harga,
             'kelompok' => 1,
             'transaksi' => 'penjualan',
         ]);
 
-        return redirect('/pembayaran/viewstatus')->with('success','Approve sukses');
-    }
-
-    public function unapprove($no_transaksi){
-        // echo $no_transaksi;
-        // update status di tabel pembayaran
-        $date = date('Y-m-d H:i:s');
-
-        $affected = DB::table('pembayaran')
-              ->where('no_transaksi', $no_transaksi)
-              ->update([
-                            'status' => 'unapproved',
-                            'tgl_konfirmasi' => $date
-                        ]);
-
-        // update di tabel penjualan statusnya sudah selesai
-        $affected = DB::table('penjualan')
-              ->where('no_transaksi', $no_transaksi)
-              ->update([
-                            'status' => 'selesai'
-                        ]);
-                    
-        // tambahkan ke status transaksi
-        $id_customer = Auth::id();
-        DB::table('status_transaksi')->insert([
-            'no_transaksi' => $no_transaksi,
-            'id_customer' => $id_customer,
-            'status' => 'unapproved',
-            'waktu' => now(),
-        ]);
-
-        // query dapatkan nilai nominal transaksi
-        $data_penjualan = DB::table('penjualan')->where('no_transaksi', $no_transaksi)->first();
-        $data_pembayaran = DB::table('pembayaran')->where('no_transaksi', $no_transaksi)->first();
-
-        //catat ke jurnal
-        DB::table('jurnal')->insert([
-            'id_transaksi' => $data_pembayaran->id,
-            'kode_akun' => '111',
-            'tgl_jurnal' => $date,
-            'posisi_d_c' => 'd',
-            'nominal' => $data_penjualan->total_pengajuan,
-            'kelompok' => 1,
-            'transaksi' => 'penjualan',
-        ]);
-
-        DB::table('jurnal')->insert([
-            'id_transaksi' => $data_pembayaran->id,
-            'kode_akun' => '411',
-            'tgl_jurnal' => $date,
-            'posisi_d_c' => 'c',
-            'nominal' => $data_penjualan->total_pengajuan,
-            'kelompok' => 1,
-            'transaksi' => 'penjualan',
-        ]);
-
-        return redirect('/pembayaran/viewstatus')->with('success','Unapprove sukses');
+        return redirect('/pembayaran/viewapprovalstatus')->with('success','Approve sukses');
     }
 }
-

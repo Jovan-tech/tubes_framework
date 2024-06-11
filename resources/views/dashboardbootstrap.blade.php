@@ -1,7 +1,6 @@
 @extends('layoutbootstrap')
 
 @section('konten')
-
     <!--  Main wrapper -->
     <div class="body-wrapper">
       <!--  Header Start -->

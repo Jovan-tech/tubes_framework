@@ -2,18 +2,6 @@
 
 @section('konten')
 
-<!-- Sweet Alert -->
-@if(isset($status_hapus))
-        <script>
-            Swal.fire({
-                title: 'Berhasil!',
-                text: 'Hapus Data Berhasil',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-            });
-        </script>
-@endif
-
 <!--  Main wrapper -->
 <div class="body-wrapper">
       <!--  Header Start -->
@@ -71,7 +59,7 @@
 
                 <!-- <div class="col-md-12"> -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                  <h5 class="card-title fw-semibold mb-4">Status Pembayaran</h5>
+                  <h5 class="card-title fw-semibold mb-4">Status Pembayaran Payment Gateway</h5>
                 </div>
                 
                 <!-- Awal Status -->
@@ -84,39 +72,38 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>No</th>
+                                                    <th>Tgl Transaksi</th>
+                                                    <th>Tgl Expired</th>
                                                     <th>Tgl Bayar</th>
-                                                    <th>Barang</th>
-                                                    <th>Bukti Bayar</th>
-                                                    <th>Total</th>
+                                                    <th>Total Harga</th>
+                                                    <th>Kode</th>
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tfoot class="thead-dark">
                                                 <tr>
                                                     <th>No</th>
+                                                    <th>Tgl Transaksi</th>
+                                                    <th>Tgl Expired</th>
                                                     <th>Tgl Bayar</th>
-                                                    <th>Barang</th>
-                                                    <th>Bukti Bayar</th>
-                                                    <th>Total</th>
+                                                    <th>Total Harga</th>
+                                                    <th>Kode</th>
                                                     <th>Status</th>
                                                 </tr>
                                             </tfoot>
                                             <tbody>
-                                            @foreach ($statuspembayaran as $p)
-                                                <tr>
-                                                    <td>{{ $p->no_transaksi }}</td>
-                                                    <td>{{ $p->tgl_bayar }}</td>
-                                                    <td>{{ $p->list_barang }}</td>
-                                                    <td>
-                                                        <a data-fancybox="gallery" href="{{url('konfirmasi')}}/{{$p->bukti_bayar}}">
-                                                            <img src="{{url('konfirmasi')}}/{{$p->bukti_bayar}}" width="150px" height="150px">
-                                                        </a>
+                                                @foreach ($statuspembayaran as $p)
+                                                    <tr>
+                                                        <td>{{ $p->no_transaksi }}</td>
+                                                        <td>{{ $p->tgl_transaksi }}</td>
+                                                        <td>{{ $p->tgl_expired }}</td>
+                                                        <td>{{ $p->settlement_time }}</td>
+                                                        <td style="text-align:right">{{ rupiah($p->total_harga) }}</td>
+                                                        <td>{{ $p->status_code }}</td>
+                                                        <td>{{ $p->transaction_status }}</td>
                                                         
-                                                    </td>
-                                                    <td>Rp {{ number_format($p->total_harga) }}</td>
-                                                    <td>{{ $p->status }}</td>
-                                                </tr>
-                                            @endforeach
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                 </div>

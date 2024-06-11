@@ -80,49 +80,47 @@
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <a href="{{ url('/pemasukan/tambah') }}"
                                             class="btn btn-success btn-icon-split">
-                                            <span class="text">Tambah Pemasukan</span>
+                                            <span class="text">Tambah Pemasukan Kas</span>
                                             <span class="icon text-white-200">
                                                 <i class="ti ti-plus"></i>
                                             </span>
                                         </a>
                                     </div>
-                                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                        <p class="card-title fw-semibold transparan-bro">Tanggal Awal</p>
-                                        <p class="card-title fw-semibold transparan-bro">Tanggal Akhir</p>
-                                    </div>
+                                    <form method="GET" action="{{ route('pemasukan.index') }}">
+                                        <div class="row mb-4">
+                                            <div class="col-md-3">
+                                                <label for="tanggal_mulai">Tanggal mulai</label>
+                                                <input type="date" id="tanggal_mulai" name="tanggal_mulai" class="form-control" value="{{ request('tanggal_mulai') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="tanggal_selesai">Tanggal selesai</label>
+                                                <input type="date" id="tanggal_selesai" name="tanggal_selesai" class="form-control" value="{{ request('tanggal_selesai') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="submit" class="btn btn-primary mt-4">Cari</button>
+                                                <a href="{{ route('pemasukan.index') }}" class="btn btn-secondary mt-4">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                 <thead class="thead-dark">
-                                                    <tr>                                                    
+                                                    <tr>       
+                                                    <th>ID</th>                                             
                                                     <th>Tanggal</th>
                                                     <th>Perincian</th>
                                                     <th>Jumlah</th>
-                                                    <th>Aksi</th>                                                     
+                                                    <th>Total</th>                                                                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($pemasukan as $p)
+                                                    @foreach ($pemasukan as $p => $r)
                                                     <tr>
-                                                        
-                                                        <td>{{ $p -> tanggal}}</td>
-                                                        <td>{{ $p -> perincian}}</td>
-                                                        <td>Rp.{{ number_format ($p -> jumlah, 0, ',', '.') }}</td>
-                                                        
-                                                        <td>                                                    
-                                                            <a href="{{ route('pemasukan.edit', $p->id) }}" class="btn btn-success btn-icon-split btn-sm">
-                                                                <span class="icon text-white-50">
-                                                                    <i class="ti ti-check"></i>
-                                                                </span>
-                                                                <span class="text">Ubah</span>
-                                                            </a>
-
-                                                            <a href="#" onclick="deleteConfirm(this); return false;" data-id="{{ $p->id }}" class="btn btn-danger btn-icon-split btn-sm">
-                                                                <span class="icon text-white-50">
-                                                                    <i class="ti ti-minus"></i>
-                                                                </span>
-                                                                <span class="text">Hapus</span>
-                                                            </a>                                                    
-                                                        </td>                                                        
+                                                        <td>{{ $r['id'] }}</td>
+                                                        <td>{{ $r['tanggal'] }}</td>                                                        
+                                                        <td>{{ $r['perincian'] }}</td>
+                                                        <td>Rp.{{ number_format ($r['jumlah'], 0, ',', '.') }}</td>    
+                                                        <td>Rp.{{ number_format ($r['total'], 0, ',', '.') }}</td>                                                                                                                                                                  
                                                     </tr>
                                                     @endforeach
                                                 </tbody>                                      

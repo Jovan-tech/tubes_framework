@@ -1,9 +1,8 @@
 @extends('layoutbootstrap')
 
 @section('konten')
-
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
+<!--  Main wrapper -->
+<div class="body-wrapper">
       <!--  Header Start -->
       <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -22,7 +21,7 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank" class="btn btn-primary">Download Free</a>
+            <a href="#" class="btn btn-primary">{{ Auth::user()->name }}</a>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
@@ -52,54 +51,50 @@
       </header>
       <!--  Header End -->
       <div class="container-fluid">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title fw-semibold mb-4">Data Pemasukan</h5>
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <h5 class="card-title fw-semibold mb-4">Berita Terbaru</h5>
 
-                <!-- Display Error jika ada error -->
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                  <!-- Awal Card Body Galeri Berita -->
+                  <div class="album py-5 bg-light">
+                        <div class="container">
+                        
+                        <div class="row">
+                            @foreach ($hasil->articles as $p)
+                                <div class="col-md-4">
+                                    <div class="card mb-4 box-shadow">
+                                        <a data-fancybox="gallery" href="{{ $p->urlToImage }}">
+                                            <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap" src="{{ $p->urlToImage }}" width="300" height="200">
+                                        </a>
+                                        <div class="card-body">
+                                            <p class="card-text" style="text-align: justify;">{{$p->description}}</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-sm btn-outline-secondary" href="{{$p->url}}" role="button" target="_blank">View</a>
+                                                </div>
+                                                <small class="text-muted">{{$p->publishedAt}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <!-- Akhir Display Error -->
+                            
+                        </div>
+                  </div>
+                  <!-- Akhir Card Body Galeri Berita -->
 
-                <!-- Awal Dari Input Form -->
-                <form action="{{ url('/pemasukan/edit', $pemasukan->id) }}" method="post">
-                    @csrf
-                    @method('PUT')
-                    
-                        <div class="mb-3"><label for="kodepemasukanlabel">Jumlah</label>
-                        <input class="form-control form-control-solid" id="jumlah" name="jumlah" type="number" value="{{$pemasukan->jumlah}}"></div>
-
-                    <div class="mb-3"><label for="namapemasukanlabel">tanggal</label>
-                    <input class="form-control form-control-solid" id="tanggal" name="tanggal" type="date" value="{{$pemasukan->tanggal}}">
-                    </div>
-                    
-        
-                    <div class="mb-0"><label for="alamatpemasukanlabel">Perincian</label>
-                        <textarea class="form-control form-control-solid" id="perincian" name="perincian" rows="3">{{$pemasukan->perincian}}</textarea>
-                    </div>
-                    <br>
-                    <!-- untuk tombol simpan -->
-                    
-                    <input class="col-sm-1 btn btn-success btn-sm" type="submit" value="Ubah">
-
-                    <!-- untuk tombol batal simpan -->
-                    <a class="col-sm-1 btn btn-dark  btn-sm" href="{{ url('/pemasukan') }}" role="button">Batal</a>
-                    
-                </form>
-                <!-- Akhir Dari Input Form -->
-            
+                </div>
+                
+                
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-		
-		
-		
+
+
         
+
 @endsection

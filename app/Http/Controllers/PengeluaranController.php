@@ -12,13 +12,43 @@ use App\Models\Pengeluaran;
 class PengeluaranController extends Controller
 {
 
-    public static function index ()
+    public static function index (Request $request)
     {
-        //query data
-        $pengeluaran = Pengeluaran::all();
+        
+        $tanggalmulai = $request->query('tanggal_mulai');
+        $tanggalselesai = $request->query('tanggal_selesai');
+
+        $pengeluaran = Pengeluaran::when($tanggalmulai, function ($query) use ($tanggalmulai) {
+            return $query->where('tanggal', '>=', $tanggalmulai);
+        })->when($tanggalselesai, function ($query) use ($tanggalselesai) {
+            return $query->where('tanggal', '<=', $tanggalselesai);
+        })->get();
+
+        $data = collect();
+        
+        foreach ($pengeluaran as $p) {
+            $data->push([
+                'id' => $p ->id,
+                'input_data' => $p->created_at,
+                'tanggal' => $p->tanggal,
+                'perincian' => $p->perincian,
+                'pengeluaran' => $p->jumlah,                
+                'jumlah' => 0,
+            ]);
+        }
+
+        $data = $data->sortBy('tanggal');
+
+        $jumlah = 0;
+        $data = $data->map(function ($item) use (&$jumlah) {
+            $jumlah += $item['pengeluaran'];
+            $item['jumlah'] = $jumlah;
+            return $item;
+        });
+    
         return view('pengeluaran.create',
                     [
-                        'pengeluaran' => $pengeluaran
+                        'pengeluaran' => $data,
                     ]
                   );
     }

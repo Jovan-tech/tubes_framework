@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Jurnal;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
+use App\Models\Kegiatan;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreJurnalRequest;
 use App\Http\Requests\UpdateJurnalRequest;
 
@@ -16,48 +18,62 @@ class JurnalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
 {
-    // Fetch data from both tables
-    $pemasukan = Pemasukan::all();
-    $pengeluaran = Pengeluaran::all();
+    
+    $tanggalmulai = $request->query('tanggal_mulai');
+    $tanggalselesai = $request->query('tanggal_selesai');
 
-    // Merge data
-    $transactions = collect();
+    
+    $pemasukan = Pemasukan::when($tanggalmulai, function ($query) use ($tanggalmulai) {
+        return $query->where('tanggal', '>=', $tanggalmulai);
+    })->when($tanggalselesai, function ($query) use ($tanggalselesai) {
+        return $query->where('tanggal', '<=', $tanggalselesai);
+    })->get();
+
+    $pengeluaran = Pengeluaran::when($tanggalmulai, function ($query) use ($tanggalmulai) {
+        return $query->where('tanggal', '>=', $tanggalmulai);
+    })->when($tanggalselesai, function ($query) use ($tanggalselesai) {
+        return $query->where('tanggal', '<=', $tanggalselesai);
+    })->get();
+
+    $kegiatan = Kegiatan::all();
+    
+    $data = collect();
 
     foreach ($pemasukan as $p) {
-        $transactions->push([
+        $data->push([
             'input_data' => $p->created_at,
             'tanggal' => $p->tanggal,
             'perincian' => $p->perincian,
             'pemasukan' => $p->jumlah,
-            'pengeluaran' => 0, // No expenditure
-            'saldo' => 0, // Placeholder, calculate later
+            'pengeluaran' => 0,
+            'saldo' => 0,
         ]);
     }
 
     foreach ($pengeluaran as $p) {
-        $transactions->push([
+        $data->push([
             'input_data' => $p->created_at,
             'tanggal' => $p->tanggal,
             'perincian' => $p->perincian,
-            'pemasukan' => 0, // No income
+            'pemasukan' => 0,
             'pengeluaran' => $p->jumlah,
-            'saldo' => 0, // Placeholder, calculate later
+            'saldo' => 0,
         ]);
     }
 
-    // Sort transactions by date
-    $transactions = $transactions->sortBy('tanggal');
+    
+    $data = $data->sortBy('tanggal');
 
-    // Calculate saldo (balance)
+    
     $saldo = 0;
-    $transactions = $transactions->map(function ($item) use (&$saldo) {
+    $data = $data->map(function ($item) use (&$saldo) {
         $saldo += $item['pemasukan'] - $item['pengeluaran'];
         $item['saldo'] = $saldo;
         return $item;
     });
 
-    return view('layoutsbootstrap.laporan.jurnal', ['transactions' => $transactions]);
+    return view('layoutsbootstrap.laporan.jurnal', ['data' => $data]);
 }
 }

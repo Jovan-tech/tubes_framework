@@ -71,7 +71,7 @@
 
                 <!-- <div class="col-md-12"> -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                  <h5 class="card-title fw-semibold mb-4">Approval Pengajuan</h5>
+                  <h5 class="card-title fw-semibold mb-4">Approval Pembayaran</h5>
                 </div>
                 
                     <!-- Awal Dari Tabel -->
@@ -80,10 +80,10 @@
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>No</th>
-                                            <th>Tanggal Pengajuan</th>
-                                            <th>Tipe</th>
-                                            <th>Bukti Pengajuan</th>
-                                            <th>Total Pengajuan</th>
+                                            <th>Tgl Bayar</th>
+                                            <th>Barang</th>
+                                            <th>Bukti Bayar</th>
+                                            <th>Total</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -91,10 +91,10 @@
                                     <tfoot class="thead-dark">
                                         <tr>
                                             <th>No</th>
-                                            <th>Tanggal Pengajuan</th>
-                                            <th>Tipe</th>
-                                            <th>Bukti Pengajuan</th>
-                                            <th>Total Pengajuan</th>
+                                            <th>Tgl Bayar</th>
+                                            <th>Barang</th>
+                                            <th>Bukti Bayar</th>
+                                            <th>Total</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -111,7 +111,7 @@
                                                 </a>
                                                 
                                             </td>
-                                            <td>{{ rupiah($p->total_pengajuan) }}</td>
+                                            <td>{{ rupiah($p->total_harga) }}</td>
                                             <td>{{ $p->status }}</td>
                                             <td>
                                                 <?php 
@@ -119,13 +119,13 @@
                                                         ?>
                                                             <a href="{{url('pembayaran/approve')}}/{{$p->no_transaksi}}" class="btn btn-success btn-circle" >
                                                                 
-                                                                Approve</i>
+                                                                <i class="ti ti-pencil"></i>
                                 
                                                             </a>
 
-                                                            <a href="{{url('pembayaran/unapprove')}}/{{$p->no_transaksi}}" class="btn btn-danger btn-circle">
+                                                            <a href="#" class="btn btn-danger btn-circle">
                                                                 
-                                                                    Unapprove</i>
+                                                                    <i class="ti ti-trash"></i>
                                                                 
                                                             </a>
                                                         <?php

@@ -3,7 +3,6 @@
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
 
-
         <!-- Sidebar Start -->
         <aside class="left-sidebar">
             <!-- Sidebar scroll-->
@@ -58,7 +57,7 @@
                                 </span>
                                 <span class="hide-menu">PIC</span>
                             </a>
-                        </li>                    
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ url('penelitian') }}" aria-expanded="false">
                                 <span>
@@ -67,7 +66,14 @@
                                 <span class="hide-menu">Nama Kegiatan</span>
                             </a>
                         </li>
-                        <li class="nav-small-cap">
+                       
+
+                        @if(auth()->user()->role == 'admin')
+                            <li class="nav-small-cap">
+                                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                                <span class="hide-menu">Admin</span>
+                            </li>
+                            <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Transaksi</span>
                         </li>
@@ -83,114 +89,80 @@
                             </div>
                         </li>
                         {{-- sub menu pengajuan --}}
-                        <li
-                            class="sidebar-item {{ request()->is('penjualan*') ? '' : 'd-none' }} d-flex flex-column p-2">
+                        <li class="sidebar-item {{ request()->is('penjualan*') ? '' : 'd-none' }} d-flex flex-column p-2">
                             <div>
-                                <a class="sidebar-link"
-                                    href="{{ url('pemasukan') }}">
+                                <a class="sidebar-link" href="{{ url('pemasukan') }}">
                                     <span class="hide-menu pl-4">Pemasukan</span>
                                 </a>
                             </div>
                             <div>
-                                <a class="sidebar-link"
-                                    href="{{ url('pengeluaran') }}">
+                                <a class="sidebar-link" href="{{ url('pengeluaran') }}">
                                     <span class="hide-menu pl-4">Pengeluaran</span>
                                 </a>
-                            </div>                         
+                            </div>
                         </li>
-                        {{-- end sub menu pengajuan --}}
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('jurnal') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ url('midtrans') }}" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-credit-card"></i>
+                                <i class="ti ti-credit-card"></i>
                                 </span>
-                                <span class="hide-menu">Transaksi</span>
+                                <span class="hide-menu">Midtrans</span>
                             </a>
-                        </li>
+                            </li>
+
+                            <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ url('pembayaran/viewstatusPG') }}" aria-expanded="false">
+                                <span>
+                                <i class="ti ti-credit-card"></i>
+                                </span>
+                                <span class="hide-menu">View Status PG</span>
+                            </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ url('midtrans/bayar') }}" aria-expanded="false">
+                                <span>
+                                <i class="ti ti-credit-card"></i>
+                                </span>
+                                <span class="hide-menu">Pembayaran PG</span>
+                            </a>
+                            </li>
+                        {{-- end sub menu pengajuan --}}                        
 
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">LAPORAN</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('jurnal/umum') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ url('jurnal') }}" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-files"></i>
                                 </span>
                                 <span class="hide-menu">Jurnal Umum</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('jurnal/bukubesar') }}" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-archive"></i>
-                                </span>
-                                <span class="hide-menu">Buku Besar</span>
-                            </a>
-                        </li>
-
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">GRAFIK</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('grafik/viewPenjualanBlnBerjalan') }}"
-                                aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Penjualan</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('grafik/viewJmlPenjualan') }}"
-                                aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-aperture"></i>
-                                </span>
-                                <span class="hide-menu">Barang</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('grafik/viewJmlBarangTerjual') }}"
-                                aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-package"></i>
-                                </span>
-                                <span class="hide-menu">Barang Per Bulan</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('grafik/viewPenjualanSelectOption/2024') }}"
-                                aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-package"></i>
-                                </span>
-                                <span class="hide-menu">Penjualan AJAX</span>
-                            </a>
-                        </li>
-                        <!-- grafik/viewPenjualanSelectOption/{tahun} -->
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">ANALISIS DATA</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-mood-happy"></i>
-                                </span>
-                                <span class="hide-menu">Icons</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-aperture"></i>
-                                </span>
-                                <span class="hide-menu">Sample Page</span>
-                            </a>
-                        </li>
+                            <li class="nav-small-cap">
+                                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                                <span class="hide-menu">ANALISIS DATA</span>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-mood-happy"></i>
+                                    </span>
+                                    <span class="hide-menu">Icons</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-aperture"></i>
+                                    </span>
+                                    <span class="hide-menu">Sample Page</span>
+                                </a>
+                            </li>
+                        @endif
 
                     </ul>
 
