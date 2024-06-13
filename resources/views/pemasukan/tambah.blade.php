@@ -102,21 +102,7 @@
                                 <input type="radio" id="eksternal" name="jenis_kegiatan" value="eksternal">
                                 <label for="eksternal">Eksternal</label>
                             </div>
-                            <br>
-
-                            <!-- Additional information for selected kegiatan -->
-                            <div id="kegiatanInfo" style="display: none;">
-                                <div class="mb-0">
-                                    <label for="nama">Nama</label>
-                                    <input type="text" class="form-control form-control-solid" id="nama" name="nama" readonly>
-                                </div>
-                                <br>
-                                <div class="mb-0">
-                                    <label for="alamat">Alamat</label>
-                                    <input type="text" class="form-control form-control-solid" id="alamat" name="alamat" readonly>
-                                </div>
-                                <br>
-                            </div>
+                            <br>                        
 
                             <input class="col-sm-1 btn btn-success btn-sm" type="submit" value="Next">
                             <a class="col-sm-1 btn btn-dark btn-sm" href="{{ url('/pemasukan') }}" role="button">Cancel</a>

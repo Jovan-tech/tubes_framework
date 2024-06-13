@@ -420,7 +420,6 @@ class Penjualan extends Model
     public static function viewKeranjang($id_customer){
         $sql = "SELECT  a.no_transaksi,
                         c.nama_barang,
-                        c.foto,
                         c.harga,
                         b.tgl_transaksi,
                         b.tgl_expired,
@@ -441,29 +440,40 @@ class Penjualan extends Model
 
     // view data siap bayar
     // view keranjang belanja
-    public static function viewSiapBayar(){
-        $sql = "SELECT  
-                    c.perincian,                        
-                    c.jumlah,
-                    c.tanggal,
-                    a.status
+    public static function viewSiapBayar($id_customer){
+        $sql = "SELECT  a.no_transaksi,
+                        c.nama_barang,                        
+                        c.harga,
+                        b.tgl_transaksi,
+                        b.tgl_expired,
+                        b.jml_barang,
+                        b.total,
+                        a.status,
+                        b.id as id_penjualan_detail,
+                        a.id as id_penjualan
                 FROM penjualan a
-                JOIN pengeluaran c 
-                ON (a.id = c.id)
-                WHERE a.status IN ('siap_bayar')";
-        $result = DB::select($sql);
-        return $result;
+                JOIN penjualan_detail b
+                ON (a.no_transaksi=b.no_transaksi)
+                JOIN barang c 
+                ON (b.id_barang = c.id)
+                WHERE a.id_customer = ? AND a.status 
+                in ('siap_bayar')";
+        $barang = DB::select($sql,[$id_customer]);
+        return $barang;
     }
-    
 
-    public static function jmlviewSiapBayar(){
-        $sql = "SELECT count(*) as jml
-                FROM penjualan
-                WHERE status IN ('siap_bayar')";
-        $result = DB::select($sql);
-        return $result;
+    public static function jmlviewSiapBayar($id_customer){
+        $sql = "SELECT  count(*) as jml
+                FROM penjualan a
+                JOIN penjualan_detail b
+                ON (a.no_transaksi=b.no_transaksi)
+                JOIN barang c 
+                ON (b.id_barang = c.id)
+                WHERE a.id_customer = ? AND a.status 
+                in ('siap_bayar')";
+        $barang = DB::select($sql,[$id_customer]);
+        return $barang;
     }
-    
 
     // untuk menghapus data penjualan detail
     public static function hapuspenjualandetail($id_penjualan_detail){

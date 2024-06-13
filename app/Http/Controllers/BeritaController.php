@@ -36,7 +36,7 @@ class BeritaController extends Controller
     // untuk galeri berita
     public function getNews(){
         // akses API
-        $url = 'https://newsapi.org/v2/top-headlines?country=gb&category=business&apiKey=9f26f876a4294e7a8c9ab73b0041575c';
+        $url = 'https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=9f26f876a4294e7a8c9ab73b0041575c';
         $response = Http::get($url);
         $hasil = json_decode($response);
         // var_dump($hasil);

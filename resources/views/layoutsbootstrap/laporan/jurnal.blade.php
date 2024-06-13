@@ -28,32 +28,57 @@
                             </div>
                         </div>
                     </form>
-
+                    <?php $nomor = 0; ?>
                     <div class="table-responsive">
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>No.</th>
-                                    <th>Input Data</th>
                                     <th>Tanggal</th>
-                                    <th>Perincian</th>
-                                    <th>Pemasukan (Rp)</th>
-                                    <th>Pengeluaran (Rp)</th>
-                                    <th>Saldo (Rp)</th>
+                                    <th colspan="2" style="text-align: center;">Akun</th>                                
+                                    <th>Debit (Rp)</th>
+                                    <th>Credit (Rp)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $jovan => $yapius)
-                                <tr class="{{ $jovan % 2 == 0 ? 'even' : 'odd' }}">
-                                    <td>{{ $jovan + 1 }}</td>
-                                    <td>{{ $yapius['input_data'] }}</td>
-                                    <td>{{ $yapius['tanggal'] }}</td>
-                                    <td>{{ $yapius['perincian'] }}</td>
-                                    <td>{{ number_format($yapius['pemasukan'], 0, ',', '.') }}</td>
-                                    <td>{{ number_format($yapius['pengeluaran'], 0, ',', '.') }}</td>
-                                    <td>{{ number_format($yapius['saldo'], 0, ',', '.') }}</td>
-                                </tr>
+                                    @if (str_contains(strtolower($yapius['perincian']), 'masuk'))
+                                        <tr>
+                                            <td rowspan="2">{{ ++$nomor }}</td>
+                                            <td rowspan="2">{{ $yapius['tanggal'] }}</td>
+                                            <td rowspan="2">Kas</td>
+                                            <td> </td>
+                                            <td>{{ number_format($yapius['pemasukan'], 0, ',', '.') }}</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pendapatan</td>
+                                            <td>0</td>
+                                            <td>{{ number_format($yapius['pemasukan'], 0, ',', '.') }}</td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td rowspan="2">{{ ++$nomor }}</td>
+                                            <td rowspan="2">{{ $yapius['tanggal'] }}</td>
+                                            <td rowspan="2">Pendapatan</td>
+                                            <td> </td>                                            
+                                            <td>{{ number_format($yapius['pengeluaran'], 0, ',', '.') }}</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Kas</td>
+                                            <td>0</td>
+                                            <td>{{ number_format($yapius['pengeluaran'], 0, ',', '.') }}</td>
+                                            
+                                        </tr>
+                                    @endif
                                 @endforeach
+                                {{-- Total Row --}}
+                                <tr>
+                                    <td colspan="5" rowspan="5" style="text-align :right;">
+                                    <strong>Total:</strong></td>
+                                    <td><strong>{{ number_format($yapius['saldo'], 0, ',', '.') }}</strong></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -83,27 +83,24 @@
                                     <input class="form-control form-control-solid" id="kode" name="kode" type="text" value="{{$no_transaksi}}" readonly>
                                 </div>
                             </fieldset>    
-                            <div class="mb-3"><label for="namaperusahaanlabel">Isi Keranjang <b>({{rupiah($totaltagihan)}})</b></label>
+                            <div class="mb-3"><label for="namaperusahaanlabel">Total Transaksi <b>({{rupiah($totaltagihan)}})</b></label>
                                 <ul class="list-group">
                                 @foreach ($keranjang as $k)
                                     <li class="list-group-item">
                                         <b>{{$k->nama_barang}}</b> <br>
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                                <img width="150px" height="150px" id="x-2" src="{{url('barang')}}/{{$k->foto}}" zn_id="79" title alt="ok">
-                                            </div>
+                                        <div class="row">                                            
                                             <div class="col-sm-10" align="left">
                                                 <table>
                                                     <tr>
-                                                        <td>
-                                                        Harga per item
+                                                        <td style="width: 33%;">
+                                                        Transaksi per item
                                                         </td>
                                                         <td>=</td>
                                                         <td style="text-align:right">{{rupiah($k->harga)}}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                        Jumlah Barang
+                                                        <td style="width: 33%;">
+                                                        Jumlah Transaksi
                                                         </td>
                                                         <td>=</td>
                                                         <td style="text-align:right">{{number_format($k->jml_barang)}}</td>
@@ -116,8 +113,8 @@
                                                         
                                                     </tr>
                                                     <tr> 
-                                                        <td>
-                                                        Total Harga  
+                                                        <td style="width: 33%;">
+                                                        Total Transaksi
                                                         </td>
                                                         <td>=</td>
                                                         <td style="text-align:right">
@@ -156,6 +153,7 @@
 
 <!-- Untuk Pemrosesan Midtrans -->
 <!-- Untuk Midtrans -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key= env(MIDTRANS_CLIENT_KEY)></script>
 <script type="text/javascript">
       // For example trigger on button clicked, or any time you need
       var payButton = document.getElementById('pay-button');

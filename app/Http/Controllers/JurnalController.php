@@ -6,6 +6,7 @@ use App\Models\Jurnal;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use App\Models\Kegiatan;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreJurnalRequest;
 use App\Http\Requests\UpdateJurnalRequest;
@@ -56,9 +57,9 @@ class JurnalController extends Controller
         $data->push([
             'input_data' => $p->created_at,
             'tanggal' => $p->tanggal,
-            'perincian' => $p->perincian,
+            'perincian' => $p->deskripsi,
             'pemasukan' => 0,
-            'pengeluaran' => $p->jumlah,
+            'pengeluaran' => $p->harga,
             'saldo' => 0,
         ]);
     }

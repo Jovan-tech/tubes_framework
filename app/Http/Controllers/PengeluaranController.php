@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePengeluaranRequest;
 use App\Http\Requests\UpdatePengeluaranRequest;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Pengeluaran;
+use App\Models\Barang;
 
 class PengeluaranController extends Controller
 {
@@ -32,17 +34,17 @@ class PengeluaranController extends Controller
                 'input_data' => $p->created_at,
                 'tanggal' => $p->tanggal,
                 'perincian' => $p->perincian,
-                'pengeluaran' => $p->jumlah,                
-                'jumlah' => 0,
+                'jumlah' => $p->jumlah,                
+                'total' => 0,
             ]);
         }
 
         $data = $data->sortBy('tanggal');
 
-        $jumlah = 0;
-        $data = $data->map(function ($item) use (&$jumlah) {
-            $jumlah += $item['pengeluaran'];
-            $item['jumlah'] = $jumlah;
+        $total = 0;
+        $data = $data->map(function ($item) use (&$total) {
+            $total += $item['jumlah'];
+            $item['total'] = $total;
             return $item;
         });
     
@@ -54,18 +56,41 @@ class PengeluaranController extends Controller
     }
     public function store(StorePengeluaranRequest $request)
     {
-        //digunakan untuk validasi kemudian kalau ok tidak ada masalah baru disimpan ke db
-        $validated = $request->validate([
-            'jumlah' => 'required',
-            'tanggal' => 'required',
-            'perincian' => 'required',
+        $request->validate([
+            'nama_barang' => 'required',
+            
+            'harga' => 'required',
+            'tanggal' => 'required|date',
+            'deskripsi' => 'required',
+            'stok' => 'required',
         ]);
 
-        // masukkan ke db
-        Pengeluaran::create($request->all());
+        // Handle file upload
+       
         
-        return redirect()->route('pengeluaran.index')->with('success','Data Berhasil di Input');
+
+        // Use a transaction to ensure both inserts succeed or fail together
+        DB::transaction(function () use ($request) {
+            // Insert into barang table
+            Barang::create([
+                'nama_barang' => $request->nama_barang,                
+                'harga' => $request->harga,
+                'stok' => $request->stok,
+                'deskripsi' => $request->deskripsi,
+                'tanggal' => $request->tanggal,
+            ]);
+
+            // Insert into pengeluaran table
+            Pengeluaran::create([
+                'harga' => $request->harga,
+                'tanggal' => $request->tanggal,
+                'deskripsi' => $request->deskripsi,
+            ]);
+        });
+
+        return redirect()->route('pengeluaran.index')->with('success', 'Data Berhasil di Input');
     }
+
     public function edit(UpdatePengeluaranRequest $request, Pengeluaran $pengeluaran)
     {
         //digunakan untuk validasi kemudian kalau ok tidak ada masalah baru diupdate ke db

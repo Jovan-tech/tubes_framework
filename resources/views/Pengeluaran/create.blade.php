@@ -85,46 +85,5 @@
                                                 <i class="ti ti-plus"></i>
                                             </span>
                                         </a>
-                                    </div>
-                                    <form method="GET" action="{{ route('pemasukan.index') }}">
-                                        <div class="row mb-4">
-                                            <div class="col-md-3">
-                                                <label for="tanggal_mulai">Tanggal mulai</label>
-                                                <input type="date" id="tanggal_mulai" name="tanggal_mulai" class="form-control" value="{{ request('tanggal_mulai') }}">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label for="tanggal_selesai">Tanggal selesai</label>
-                                                <input type="date" id="tanggal_selesai" name="tanggal_selesai" class="form-control" value="{{ request('tanggal_selesai') }}">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <button type="submit" class="btn btn-primary mt-4">Cari</button>
-                                                <a href="{{ route('pemasukan.index') }}" class="btn btn-secondary mt-4">Reset</a>
-                                            </div>
-                                        </div>
-                                    </form>                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                    
-                                                    <th>Tanggal</th>
-                                                    <th>Perincian</th> 
-                                                    <th></th>                                                        
-                                                    <th>Jumlah</th>                                                                                                    
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($pengeluaran as $p)
-                                                    <tr>
-                                                        
-                                                        <td>{{ $p['tanggal']}}</td>
-                                                        <td>{{ $p['perincian']}}</td>
-                                                        <td>Rp.{{ number_format ($p['jumlah'], 0, ',', '.') }}</td>                                                                                                              
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>                                      
-                                        </table>                    
-
-                                </div>
-
-
+                                    </div>                                                                        
 @endsection

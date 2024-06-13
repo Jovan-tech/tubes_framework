@@ -103,7 +103,15 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('midtrans') }}" aria-expanded="false">
+                        <a class="sidebar-link" href="{{ url('penjualan') }}" aria-expanded="false">
+                            <span>
+                            <i class="ti ti-credit-card"></i>
+                            </span>
+                            <span class="hide-menu">Transaksi</span>
+                        </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ url('midtrans/status') }}" aria-expanded="false">
                                 <span>
                                 <i class="ti ti-credit-card"></i>
                                 </span>
@@ -147,11 +155,11 @@
                                 <span class="hide-menu">ANALISIS DATA</span>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+                                <a class="sidebar-link" href="berita/galeri" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-mood-happy"></i>
                                     </span>
-                                    <span class="hide-menu">Icons</span>
+                                    <span class="hide-menu">Berita</span>
                                 </a>
                             </li>
                             <li class="sidebar-item">

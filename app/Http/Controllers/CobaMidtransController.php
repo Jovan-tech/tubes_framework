@@ -161,62 +161,77 @@ class CobaMidtransController extends Controller
 
     // bayar
     public function bayar(){
-        // Get items ready for payment
-        $keranjang = Penjualan::viewSiapBayar();
-        $jml_data = Penjualan::jmlviewSiapBayar();        
-    
-        $myArray = [];
-        foreach($keranjang as $k) {
-            // Prepare item details
-            $itemDetail = [
-                'id' => $k->id_penjualan_detail,
-                'price' => $k->harga,
-                'quantity' => $k->jml_barang,
-                'name' => $k->nama_barang,
-            ];
-    
-            // Add item details to array
-            $myArray[] = $itemDetail;
+        //id customer dari session, ini bisa diganti sesuai kebutuhan
+        $id_customer = Auth::id();
+        $keranjang = Penjualan::viewSiapBayar($id_customer);
+        $jml_data = Penjualan::jmlviewSiapBayar($id_customer);
+
+        foreach($jml_data as $k):
+            $jml = $k->jml;
+        endforeach;
+
+        if($jml>0){
+            // 
+            // dapatkan total tagihan
+            $no_transaksi = '';
+            $totaltagihan = 0;
+            
+            $myArray = array(); //untuk menyimpan objek array
+            foreach($keranjang as $k):
+                $no_transaksi = $k->no_transaksi ;
+                $totaltagihan = $totaltagihan + $k->total ;
+
+                // untuk data item detail
+                // kita perlu membuat objek dulu kemudian di masukkan ke array
+                $foo = array(
+                        'id'=> $k->id_penjualan_detail,
+                        'price' => $k->harga,
+                        'quantity' => $k->jml_barang,
+                        'name' => $k->nama_barang,
+
+                );
+                // tambahkan ke myarray
+                array_push($myArray,$foo);
+
+            endforeach;
+
+            \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+            // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+            \Midtrans\Config::$isProduction = false;
+            // Set sanitization on (default)
+            \Midtrans\Config::$isSanitized = true;
+            // Set 3DS transaction for credit card to true
+            \Midtrans\Config::$is3ds = true;
+
+            $params = array(
+                'transaction_details' => array(
+                    'order_id' => rand(), //idpesanan ini nanti bisa diambil dari no_pesanan
+                    'gross_amount' => $totaltagihan, //gross amount diisi total tagihan
+                ),
+                'item_details' => $myArray,
+                'customer_details' => array(
+                    'first_name' => Auth::user()->name,
+                    'last_name' => '',
+                    'email' => Auth::user()->email,
+                    'phone' => '',
+                ),
+            );
+            
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+
+            return view('midtrans.viewcheckout',
+                        [
+                            'keranjang' => $keranjang,
+                            'snap_token' => $snapToken,
+                        ]
+                    );
+            // 
+        }else{
+            // tidak ada keranjang kembalikan ke depan
+            return redirect('/pembayaran/viewstatusPG');
         }
-    
-        // Fetch total gross amount from pengeluaran table
-        $totaltagihan = DB::table('pengeluaran')->sum('jumlah');
-    
-        if($totaltagihan < 0.01) {
-            // Redirect back with an error message or handle it as you prefer
-            return redirect()->back()->with('error', 'Total amount must be greater than or equal to 0.01');
-        }
-    
-        \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
-        // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = true;
-    
-        $params = [
-            'transaction_details' => [
-                'order_id' => rand(), 
-                'gross_amount' => $totaltagihan, //gross amount diisi total tagihan
-            ],
-            'item_details' => $myArray,
-            'customer_details' => [
-                'first_name' => Auth::user()->name,
-                'last_name' => '',
-                'email' => Auth::user()->email,
-                'phone' => '',
-            ],
-        ];
-        
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
-    
-        return view('midtrans.viewcheckout', [
-            'keranjang' => $keranjang,
-            'snap_token' => $snapToken,
-        ]);
     }
-    
 
     // proses bayar
     public function proses_bayar(Request $request){

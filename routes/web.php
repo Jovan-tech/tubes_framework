@@ -125,6 +125,29 @@ Route::get('berita', [App\Http\Controllers\BeritaController::class,'index'])->mi
 Route::get('berita/galeri', [App\Http\Controllers\BeritaController::class,'getNews'])->middleware(['auth']);
 Route::get('berita/coba3', [App\Http\Controllers\BeritaController::class,'coba3'])->middleware(['auth']);
 
+Route::get('pembayaran/viewkeranjang', [App\Http\Controllers\PembayaranController::class,'viewkeranjang'])->middleware(['auth']);
+Route::get('pembayaran/viewstatus', [App\Http\Controllers\PembayaranController::class,'viewstatus'])->middleware(['auth']); 
+Route::get('pembayaran/viewapprovalstatus', [App\Http\Controllers\PembayaranController::class,'viewapprovalstatus'])->middleware(['auth']);
+Route::get('pembayaran/approve/{no_transaksi}', [App\Http\Controllers\PembayaranController::class,'approve'])->middleware(['auth']);
+Route::get('pembayaran/unapprove/{no_transaksi}', [App\Http\Controllers\PembayaranController::class,'unapprove'])->middleware(['auth']);
+Route::get('pembayaran/viewstatusPG', [App\Http\Controllers\PembayaranController::class,'viewstatusPG'])->middleware(['auth']);
+Route::resource('pembayaran', PembayaranController::class)->middleware(['auth']);
+
+// untuk transaksi penjualan
+Route::get('penjualan/barang/{id}', [App\Http\Controllers\PenjualanController::class,'getDataBarang'])->middleware(['auth']);
+Route::get('penjualan/keranjang', [App\Http\Controllers\PenjualanController::class,'keranjang'])->middleware(['auth']);
+Route::get('penjualan/destroypenjualandetail/{id}', [App\Http\Controllers\PenjualanController::class,'destroypenjualandetail'])->middleware(['auth']);
+Route::get('penjualan/barang', [App\Http\Controllers\PenjualanController::class,'getDataBarangAll'])->middleware(['auth']);
+Route::get('penjualan/jmlbarang', [App\Http\Controllers\PenjualanController::class,'getJumlahBarang'])->middleware(['auth']);
+Route::get('penjualan/keranjangjson', [App\Http\Controllers\PenjualanController::class,'keranjangjson'])->middleware(['auth']);
+Route::get('penjualan/checkout', [App\Http\Controllers\PenjualanController::class,'checkout'])->middleware(['auth']);
+Route::get('penjualan/invoice', [App\Http\Controllers\PenjualanController::class,'invoice'])->middleware(['auth']);
+Route::get('penjualan/jmlinvoice', [App\Http\Controllers\PenjualanController::class,'getInvoice'])->middleware(['auth']);
+Route::get('penjualan/status', [App\Http\Controllers\PenjualanController::class,'viewstatus'])->middleware(['auth']);
+
+Route::resource('penjualan', PenjualanController::class)->middleware(['auth']);
+
+
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
     // master jurnal
@@ -154,6 +177,10 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
         return view('pengeluaran.tambah');
     });
 
+    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('barang.store');
+
+    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+
     Route::resource('/jurnal', JurnalController::class)->middleware(['auth']);
 
     Route::resource('/pemasukan', PemasukanController::class)->middleware(['auth']);
@@ -174,8 +201,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::post('midtrans/proses_bayar', [App\Http\Controllers\CobaMidtransController::class,'proses_bayar'])->middleware(['auth']);
 });
 
-
-
+// transaksi pembayaran viewkeranjang
 
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);

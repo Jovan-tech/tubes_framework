@@ -72,10 +72,10 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Tgl Transaksi</th>
-                                                    <th>Tgl Expired</th>
-                                                    <th>Tgl Bayar</th>
-                                                    <th>Total Harga</th>
+                                                    <th>Tanggal Transaksi</th>
+                                                    
+                                                    <th>Tanggal Bayar</th>
+                                                    <th>Total Transaksi</th>
                                                     <th>Kode</th>
                                                     <th>Status</th>
                                                 </tr>
@@ -83,10 +83,10 @@
                                             <tfoot class="thead-dark">
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Tgl Transaksi</th>
-                                                    <th>Tgl Expired</th>
-                                                    <th>Tgl Bayar</th>
-                                                    <th>Total Harga</th>
+                                                    <th>Tanggal Transaksi</th>
+                                                    
+                                                    <th>Tanggal Bayar</th>
+                                                    <th>Total Transaksi</th>
                                                     <th>Kode</th>
                                                     <th>Status</th>
                                                 </tr>
@@ -96,7 +96,7 @@
                                                     <tr>
                                                         <td>{{ $p->no_transaksi }}</td>
                                                         <td>{{ $p->tgl_transaksi }}</td>
-                                                        <td>{{ $p->tgl_expired }}</td>
+                                                        
                                                         <td>{{ $p->settlement_time }}</td>
                                                         <td style="text-align:right">{{ rupiah($p->total_harga) }}</td>
                                                         <td>{{ $p->status_code }}</td>
