@@ -19,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContohformController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\JurnalController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 
 /*
@@ -120,6 +121,8 @@ Route::get('/permintaan/destroy/{id}', [App\Http\Controllers\PermintaanControlle
 Route::resource('/kas', KasController::class)->middleware(['auth']);
 Route::get('/kas/destroy/{id}', [App\Http\Controllers\KasController::class,'destroy'])->middleware(['auth']);
 
+Route::post('/user/switch-role/{id}', [UserController::class, 'switchRole'])->name('user.switch-role');
+
 // untuk berita
 Route::get('berita', [App\Http\Controllers\BeritaController::class,'index'])->middleware(['auth']);
 Route::get('berita/galeri', [App\Http\Controllers\BeritaController::class,'getNews'])->middleware(['auth']);
@@ -146,6 +149,10 @@ Route::get('penjualan/jmlinvoice', [App\Http\Controllers\PenjualanController::cl
 Route::get('penjualan/status', [App\Http\Controllers\PenjualanController::class,'viewstatus'])->middleware(['auth']);
 
 Route::resource('penjualan', PenjualanController::class)->middleware(['auth']);
+
+
+
+Route::get('/manajemen', [UserController::class, 'index'])->middleware('auth');
 
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
@@ -209,6 +216,7 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::get('/unauthorized', function () {
     return view('unauthorized');
 })->name('unauthorized');
+
 
 
 require __DIR__.'/auth.php';
